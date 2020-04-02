@@ -22,6 +22,7 @@ public class Student extends User {
 	}
 	
 	// 모든 멤버변수에 대한 getter/setter 메소드를 정의하시오.
+		
 	public String getDept() {
 		return dept;
 	}

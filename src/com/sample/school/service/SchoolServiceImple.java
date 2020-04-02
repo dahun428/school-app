@@ -128,10 +128,10 @@ public class SchoolServiceImple implements SchoolService {
 		
 	}
 	//개설과정 신청(학생)(수강신청)
-	public void registrationByCourseNo(int studentNo, String title) {
+	public void registrateCourse(int studentNo, String title) {
 		
 		Student student = studentRepo.getStudentByNo(studentNo);
-		Course course = courseRepo.getCourse(courseNo);
+		Course course = courseRepo.getCourse(title);
 		
 		if(student == null) {
 			System.out.println("존재하지 않은 학생입니다. 다시 입력해주세요");
@@ -190,9 +190,9 @@ public class SchoolServiceImple implements SchoolService {
 	}
 	
 	//수강신청 현황 조회
-	public void retrieveRegistrationByCourseNo(int studentNo) {
+	public void retrieveRegistration(int studentNo) {
 		
-		Student student = studentRepo.getStudentByNo(studentNo);
+		Student student = studentRepo.getStudent(studentNo);
 		if(student == null) {
 			System.out.println("존재하지 않은 학생입니다.");
 			return;
@@ -200,7 +200,7 @@ public class SchoolServiceImple implements SchoolService {
 		
 		Registration[] registrations = registrationRepo.getAllRegistrationByStudentNo(student.getNo());
 		for(Registration registration : registrations) {
-			Course course = courseRepo.getCourseByNo(registration.getCourseNo());
+			Course course = courseRepo.getCourse(registration.getCourseNo());
 			Professor professor = professorRepo.getProfessorByNo(course.getProfessorNo());
 			System.out.println(student.getNo()+"  "+student.getName()+"  "
 						+course.getName()+"         "+"\t"+professor.getName()

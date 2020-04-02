@@ -80,7 +80,7 @@ public class SchoolApp {
 					System.out.print("개설 강좌 번호를 입력하세요 :  ");
 					String name = SchoolApp.next();
 					
-					service.registrationByCourseNo(studentNo, name);
+					service.registrateCourse(studentNo, name);
 					
 					System.out.println("수강신청이 완료되었습니다.");
 				
@@ -95,7 +95,7 @@ public class SchoolApp {
 					System.out.println("=================================================================================");
 					
 					
-					service.retrieveRegistrationByCourseNo(studentNo);
+					service.retrieveRegistration(studentNo);
 					
 				}else if(StudentMenuNum == 4) {
 					

@@ -57,9 +57,10 @@ public interface SchoolService {
 	//	<li>학생등록</li>
 	void addNewStudent(Student student);
 	//	<li>수강신청</li>
-	void registrationByCourseNo(int studentNo, int courseNo);
+	void registrateCourse(int studentNo, String title);
 	//	<li>수강신청 현황 조회</li>
-	void retrieveRegistrationByCourseNo(int studentNo);
+	void retrieveRegistration(int studentNo);
+	
 	//	<li>수강신청 취소</li>
 	void cancelCourseByCourseNo(int studentNo, int courseNo);
 	//	<li>성적 조회</li>

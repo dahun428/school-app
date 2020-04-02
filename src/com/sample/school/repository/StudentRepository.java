@@ -28,7 +28,7 @@ public class StudentRepository {
 		position++;
 	}
 	
-	public Student getStudentByNo(int studentNo) {
+	public Student getStudent(int studentNo) {
 		Student student = new Student();
 		for(int i = 0; i < position; i++) {
 			if(db[i].getNo() == studentNo) {

@@ -27,6 +27,7 @@ public class CourseRepository {
 		insertCourse(new Course("데이터베이스기초 실습", 30006, 20001, 10));
 		insertCourse(new Course("암호학 개론 및 실습", 30007, 20001, 10));
 	}
+	
 	public void insertCourse(Course course) {
 		db[position] = course;
 		course.setNo(sequence);
@@ -44,7 +45,6 @@ public class CourseRepository {
 			}
 		}
 		return course;
-		
 	}
 	
 	public Course getCourse(int courseNo) {
