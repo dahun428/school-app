@@ -36,12 +36,27 @@ public class RegistrationRepository {
 		position++;
 		sequence++;
 	}
+ 
+	public Registration getRegistrationByNo(int studentNo, int courseNo) {
+		Registration registration = new Registration();
+		for(int i = 0; i < position; i++) {
+			if(db[i].getStudentNo() == studentNo && db[i].getCourseNo() == courseNo) {
+				registration = db[i];
+				break;
+			}
+		}
+		return registration;
+	}
 	
 	public Registration getRegistrationByNo(int registrationNo) {
-	
-		
-		
-		return null;
+		Registration registration = new Registration();
+		for(int i = 0; i < position; i++) {
+			if(db[i].getNo() == registrationNo) {
+				registration = db[i];
+				break;
+			}
+		}
+		return registration;
 	}
 	
 	public Registration getRegistrationByCourseNo (int courseNo) {

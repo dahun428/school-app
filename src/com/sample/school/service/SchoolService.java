@@ -65,4 +65,8 @@ public interface SchoolService {
 	//	<li>성적 조회</li>
 	void retrieveScoreByStudentNo(int studentNo);
 
+	// <li> 개인 학생정보 조회</li>
+	void retrieveStudentByStudentNo(int studentNo);
+	// 전체 강좌 조회
+	void retrieveAllCourse();
 }

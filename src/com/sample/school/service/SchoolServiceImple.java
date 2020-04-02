@@ -171,6 +171,8 @@ public class SchoolServiceImple implements SchoolService {
 			return;
 		}
 		studentRepo.insertStudent(student);
+		System.out.println("등록이 완료 되었습니다.");
+		System.out.println("나의 학번 ["+student.getNo()+"] ");
 	}
 	
 	//수강신청 현황 조회
@@ -181,12 +183,15 @@ public class SchoolServiceImple implements SchoolService {
 			System.out.println("존재하지 않은 학생입니다.");
 			return;
 		}
+		
+		
 		Registration[] registrations = registrationRepo.getAllRegistrationByStudentNo(student.getNo());
 		for(Registration registration : registrations) {
 			Course course = courseRepo.getCourseByNo(registration.getCourseNo());
-			System.out.println(student.getNo()+"\t"+student.getName()+"\t"
-						+course.getProfessorNo()+"\t"+course.getName()+"\t"
-					+course.getQuota());
+			Professor professor = professorRepo.getProfessorByNo(course.getProfessorNo());
+			System.out.println(student.getNo()+"  "+student.getName()+"  "
+						+course.getName()+"         "+"\t"+professor.getName()
+						+"  "+course.getNo()+"\t"+registration.isCancel());
 			
 		}
 		
@@ -195,6 +200,7 @@ public class SchoolServiceImple implements SchoolService {
 	//수강신청 취소	
 	public void cancelCourseByCourseNo(int studentNo, int courseNo) {
 		Student student = studentRepo.getStudentByNo(studentNo);
+
 		Course course = courseRepo.getCourseByNo(courseNo);
 		
 		if(student == null) {
@@ -205,7 +211,12 @@ public class SchoolServiceImple implements SchoolService {
 			System.out.println("해당 강좌 정보가 존재하지 않습니다.");
 			return;
 		}
-		Registration registration = registrationRepo.getRegistrationByNo(course.getNo());
+		Registration registration = registrationRepo.getRegistrationByNo(studentNo, courseNo);
+
+		if(registration == null) {
+			System.out.println("등록 내역이 존재하지 않습니다.");
+			return;
+		}
 		registration.setCancel(true);
 	}
 	//점수조회
@@ -215,7 +226,6 @@ public class SchoolServiceImple implements SchoolService {
 			System.out.println("존재하지 않은 학생정보 입니다.");
 			return;
 		}
-		
 		Registration registration = registrationRepo.getRegistrationByStudentNo(student.getNo());
 		if(registration == null) {
 			System.out.println("수강신청이 등록되지 않은 학생정보 입니다.");
@@ -226,10 +236,34 @@ public class SchoolServiceImple implements SchoolService {
 			System.out.println("존재하지 않은 강의 입니다.");
 			return;
 		}
-		
 		System.out.println(student.getNo()+"\t"+student.getName()+"\t"
 				+student.getGrade()+"\t"+course.getName()+"\t"+registration.getScore());
 		
+	}
+	//개인 학생정보 조회
+	public void retrieveStudentByStudentNo(int studentNo) {
+		
+		Student student = studentRepo.getStudentByNo(studentNo);
+		if(student.getName() == null) {
+			System.out.println("존재하지 않은 학번입니다.");
+			return;
+		}
+		System.out.println(student.getNo()+"\t"+student.getName()+
+				"\t"+student.getDept()+"\t"+student.getGrade());
+	}
+	//전체 강좌조회(registration)
+	public void retrieveAllCourse() {
+		Course[] courses = courseRepo.getAllCourse();
+				
+		for(Course course : courses) {
+			Professor professor = professorRepo.getProfessorByNo(course.getProfessorNo());
+			Subject subject = subjectRepo.getSubjectByNo(course.getSubjectNo());
+			System.out.println(course.getNo()+"\t"+course.getName()+"         "
+				+"\t"+course.getQuota()+"\t"+professor.getName()
+				+"\t"+subject.getTitle()+"                "+"\t"+subject.getDept());
+		}
+	
+	
 	}
 	
 }

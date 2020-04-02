@@ -14,7 +14,6 @@ public class Course {
 	private int subjectNo;			// 과목번호
 	private int professorNo;		// 담당교수 번호
 	private int quota;				// 과정 신청 정원
-	
 	// 기본 생성자를 정의하시오
 	public Course() {}
 

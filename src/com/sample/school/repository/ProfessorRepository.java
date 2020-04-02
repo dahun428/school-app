@@ -10,6 +10,12 @@ public class ProfessorRepository {
 	private int position = 0;
 	private int sequence = 20000;
 	
+	public ProfessorRepository() {
+		insertProfessor(new Professor("김교수", "kim@gmail.com", "전자공학과", "부교수", 5000000));
+		insertProfessor(new Professor("최교수", "choi@naver.com", "컴퓨터공학과", "정교수", 6000000));
+		insertProfessor(new Professor("박교수", "park@hanmail.net", "전자공학과", "조교수", 4500000));
+	}
+	
 	public void insertProfessor(Professor professor) {
 		db[position] = professor;
 		professor.setNo(sequence);

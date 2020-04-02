@@ -10,6 +10,17 @@ public class SubjectRepository {
 	private int position = 0;
 	private int sequence = 30000;
 	
+	public SubjectRepository() {
+		insertSubject(new Subject("회로이론", "전자공학과", 3));
+		insertSubject(new Subject("전자기학", "전자공학과", 3));
+		insertSubject(new Subject("공업수학", "전자공학과", 3));
+		insertSubject(new Subject("기초실험실습", "전자공학과", 2));
+		insertSubject(new Subject("이산수학", "컴퓨터공학과", 3));
+		insertSubject(new Subject("프로그램 기초", "컴퓨터공학과", 3));
+		insertSubject(new Subject("데이터베이스 기초", "컴퓨터공학과", 3));
+		insertSubject(new Subject("암호학 개론", "컴퓨터공학과", 3));
+	}
+	
 	public void insertSubject(Subject subject)  {
 		db[position] = subject;
 		subject.setNo(sequence);
