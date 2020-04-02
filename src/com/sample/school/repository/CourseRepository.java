@@ -35,7 +35,19 @@ public class CourseRepository {
 		sequence++;
 	}
 	
-	public Course getCourseByNo(int courseNo) {
+	public Course getCourse(String name) {
+		Course course = new Course();
+		for(int i = 0; i < position; i++) {
+			if(db[i].getName().equals(name)) {
+				course = db[i];
+				break;
+			}
+		}
+		return course;
+		
+	}
+	
+	public Course getCourse(int courseNo) {
 
 		Course course = new Course();
 		for(int i = 0; i < position; i++) {

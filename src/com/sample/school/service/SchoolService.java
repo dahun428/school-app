@@ -69,4 +69,6 @@ public interface SchoolService {
 	void retrieveStudentByStudentNo(int studentNo);
 	// 전체 강좌 조회
 	void retrieveAllCourse();
+	//전체 개설 강좌 조회
+	void retrieveAllRegistration();
 }
