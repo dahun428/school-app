@@ -37,7 +37,7 @@ public class CourseRepository {
 	}
 	
 	public Course getCourse(String name) {
-		Course course = new Course();
+		Course course = null;
 		for(int i = 0; i < position; i++) {
 			if(db[i].getName().equals(name)) {
 				course = db[i];
@@ -48,10 +48,19 @@ public class CourseRepository {
 	}
 	
 	public Course getCourse(int courseNo) {
-
-		Course course = new Course();
+		Course course = null;
 		for(int i = 0; i < position; i++) {
 			if(db[i].getNo() == courseNo) {
+				course = db[i];
+				break;
+			}
+		}
+		return course;
+	}
+	public Course getCourseBySubjectNo(int subject) {
+		Course course = null;
+		for(int i = 0; i < position; i++) {
+			if(course.getSubjectNo() == subject) {
 				course = db[i];
 				break;
 			}
@@ -68,6 +77,18 @@ public class CourseRepository {
 		int count = 0;
 		for(int i = 0; i < position; i++) {
 			if(professorNo == db[i].getProfessorNo()) {
+				course[count] = db[i];
+				count++;
+			}
+		}
+		return Arrays.copyOfRange(course, 0, count);
+	
+	}
+	public Course[] getAllCourseBySubjectNo(int subjectNo) {
+		Course[] course = new Course[position];
+		int count = 0;
+		for(int i = 0; i < position; i++) {
+			if(subjectNo == db[i].getSubjectNo()) {
 				course[count] = db[i];
 				count++;
 			}

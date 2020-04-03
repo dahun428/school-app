@@ -19,7 +19,7 @@ public class SchoolServiceImple implements SchoolService {
 	private SubjectRepository subjectRepo = new SubjectRepository();
 	private StudentRepository studentRepo = new StudentRepository();
 	
-	//신규교수 등록
+	//신규교수 등록(교수)
 	public void addNewProfessor(Professor professor) {
 
 		boolean isExist = professorRepo.isExistByEmail(professor);
@@ -31,9 +31,8 @@ public class SchoolServiceImple implements SchoolService {
 		System.out.println("신규 교수 등록이 완료되었습니다.");
 		System.out.println("교수 번호 : ["+professor.getNo()+"] ");
 		
-		
 	}
-	//신규과목 등록
+	//신규과목 등록(교수)
 	public void addNewSubject(Subject subject) {
 		
 		boolean isExist = subjectRepo.isExistSubjectByTitle(subject);
@@ -45,10 +44,23 @@ public class SchoolServiceImple implements SchoolService {
 		
 		System.out.println("신규 과목 등록이 완료되었습니다.");
 		System.out.println("과목 번호 : ["+ subject.getNo()+"] ");
-		
-		
 	}
-	//과목조회
+	//신규 개설과정 등록(교수)
+	public void addNewCourse(Course course) {
+		
+		Subject subject = subjectRepo.getSubjectByNo(course.getSubjectNo());
+		int professorNo = course.getProfessorNo();
+		Professor professor = professorRepo.getProfessorByNo(professorNo);
+		
+		if(professor.getDept() != subject.getDept()) {
+			System.out.println("해당 권한이 없습니다.");
+			return;
+		}
+		courseRepo.insertCourse(course);
+		
+		System.out.println("개설 과정 등록이 완료 되었습니다.");
+	}
+	//과목조회(교수)
 	public void retrieveSubjectByProfessorNo(int professorNo) {
 
 		Professor professor = professorRepo.getProfessorByNo(professorNo);
@@ -64,22 +76,7 @@ public class SchoolServiceImple implements SchoolService {
 		}
 		
 	}
-	//신규 개설과정 등록
-	public void addNewCourse(Course course) {
-
-		Subject subject = subjectRepo.getSubjectByNo(course.getSubjectNo());
-		int professorNo = course.getProfessorNo();
-		Professor professor = professorRepo.getProfessorByNo(professorNo);
-		
-		if(professor.getDept() != subject.getDept()) {
-			System.out.println("해당 권한이 없습니다.");
-			return;
-		}
-		courseRepo.insertCourse(course);
-		
-		System.out.println("개설 과정 등록이 완료 되었습니다.");
-	}
-	//개설과정 조회
+	//개설과정 조회(교수)
 	public void retrieveCourseByProfessorNo(int professorNo) {
 		
 		Professor professor = professorRepo.getProfessorByNo(professorNo);
@@ -98,11 +95,11 @@ public class SchoolServiceImple implements SchoolService {
 		}
 		
 	}
-	//개설과정 신청자 조회
+	//개설과정 신청자 조회(교수)
 	public void retrieveRegistrationByNo(int professorNo, int courseNo) {
 		
 		Professor professor = professorRepo.getProfessorByNo(professorNo);
-		Course course = courseRepo.getCourseByNo(courseNo);
+		Course course = courseRepo.getCourse(courseNo);
 	
 		if(professor == null) {
 			System.out.println("존재하지 않은 교수입니다. 다시 입력해주세요");
@@ -119,36 +116,37 @@ public class SchoolServiceImple implements SchoolService {
 		
 		Registration[] registrations = registrationRepo.getAllRegistrationsByCourseNo(courseNo);
 		for(Registration registration : registrations) {
-			Student student = studentRepo.getStudentByNo(registration.getStudentNo());
-			Course courses = courseRepo.getCourseByNo(registration.getCourseNo());
+			Student student = studentRepo.getStudent(registration.getStudentNo());
+			Course courses = courseRepo.getCourse(registration.getCourseNo());
 			System.out.println(courses.getName()+"\t"+"          "+student.getNo()
 				+"\t"+student.getName()+"\t"+student.getGrade()+"\t"+student.getDept()
 				+"\t"+student.getEmail()+"\t"+registration.isCancel());
 		}
 		
 	}
-	//개설과정 신청(학생)(수강신청)
-	public void registrateCourse(int studentNo, String title) {
-		
-		Student student = studentRepo.getStudentByNo(studentNo);
-		Course course = courseRepo.getCourse(title);
-		
-		if(student == null) {
-			System.out.println("존재하지 않은 학생입니다. 다시 입력해주세요");
+	//해당 교수 개설강좌 신청자 조회(교수)
+	public void retrieveRegistrationStudentByNo(int professorNo, int registrationNo) {
+		Professor professor = professorRepo.getProfessorByNo(professorNo);
+		if(professor == null) {
+			System.out.println("존재하지 않은 교수입니다.");
 			return;
 		}
-		if(course == null) {
-			System.out.println("존재하지 않은 과정입니다. 다시 입력해주세요");
+		Registration chkRegistration = registrationRepo.getRegistrationByNo(registrationNo);
+		if(chkRegistration == null) {
+			System.out.println("존재하지 않은 개설 강좌 입니다.");
 			return;
 		}
+		Registration[] registrations = registrationRepo.getAllRegistrationByStudentNo(chkRegistration.getStudentNo());
+		for(Registration registration : registrations) {
+			Student student = studentRepo.getStudent(registration.getStudentNo());
+			System.out.println(registration.getNo()+"\t"+student.getNo()
+			+"\t"+student.getName()+"\t"+student.getGrade()+"\t"+student.getDept()
+			+"\t"+student.getEmail()+"\t"+registration.isCancel()+"\t"+registration.getScore());
+		}
 		
-		Registration registration = new Registration();
-		registration.setStudentNo(student.getNo());
-		registration.setCourseNo(course.getNo());
-		registrationRepo.insertRegistration(registration);
 		
 	}
-	//성적입력
+	//성적입력(교수)
 	public void grantScore(int professorNo, int registrationNo, int score) {
 
 		Professor professor = professorRepo.getProfessorByNo(professorNo);
@@ -162,7 +160,7 @@ public class SchoolServiceImple implements SchoolService {
 			System.out.println("존재하지 않은 교수입니다.");
 			return;
 		}
-		Course course = courseRepo.getCourseByNo(registration.getCourseNo());
+		Course course = courseRepo.getCourse(registration.getCourseNo());
 		if(course == null) {
 			System.out.println("해당 과정이 존재하지 않습니다.");
 			return;
@@ -188,8 +186,29 @@ public class SchoolServiceImple implements SchoolService {
 		System.out.println("등록이 완료 되었습니다.");
 		System.out.println("나의 학번 ["+student.getNo()+"] ");
 	}
-	
-	//수강신청 현황 조회
+
+	//개설과정 신청(학생)(수강신청)
+	public void registrateCourse(int studentNo, int courseNo) {
+		
+		Student student = studentRepo.getStudent(studentNo);
+		Course course = courseRepo.getCourse(courseNo);
+		
+		if(student == null) {
+			System.out.println("존재하지 않은 학생입니다. 다시 입력해주세요");
+			return;
+		}
+		if(course == null) {
+			System.out.println("존재하지 않은 과정입니다. 다시 입력해주세요");
+			return;
+		}
+		
+		Registration registration = new Registration();
+		registration.setStudentNo(student.getNo());
+		registration.setCourseNo(course.getNo());
+		registrationRepo.insertRegistration(registration);
+		
+	}
+	//수강신청 현황 조회(학생)
 	public void retrieveRegistration(int studentNo) {
 		
 		Student student = studentRepo.getStudent(studentNo);
@@ -207,11 +226,11 @@ public class SchoolServiceImple implements SchoolService {
 						+"  "+course.getNo()+"\t"+registration.isCancel());
 		}
 	}
-	//수강신청 취소	
+	//수강신청 취소(학생)
 	public void cancelCourseByCourseNo(int studentNo, int courseNo) {
-		Student student = studentRepo.getStudentByNo(studentNo);
+		Student student = studentRepo.getStudent(studentNo);
 
-		Course course = courseRepo.getCourseByNo(courseNo);
+		Course course = courseRepo.getCourse(courseNo);
 		
 		if(student == null) {
 			System.out.println("해당 학생정보가 존재하지 않습니다.");
@@ -229,9 +248,9 @@ public class SchoolServiceImple implements SchoolService {
 		}
 		registration.setCancel(true);
 	}
-	//점수조회
+	//점수조회(학생)
 	public void retrieveScoreByStudentNo(int studentNo) {
-		Student student = studentRepo.getStudentByNo(studentNo);
+		Student student = studentRepo.getStudent(studentNo);
 		if(student == null) {
 			System.out.println("존재하지 않은 학생정보 입니다.");
 			return;
@@ -241,7 +260,7 @@ public class SchoolServiceImple implements SchoolService {
 			System.out.println("수강신청이 등록되지 않은 학생정보 입니다.");
 			return;
 		}
-		Course course = courseRepo.getCourseByNo(registration.getCourseNo());
+		Course course = courseRepo.getCourse(registration.getCourseNo());
 		if(course == null) {
 			System.out.println("존재하지 않은 강의 입니다.");
 			return;
@@ -250,10 +269,10 @@ public class SchoolServiceImple implements SchoolService {
 				+student.getGrade()+"\t"+course.getName()+"\t"+registration.getScore());
 		
 	}
-	//개인 학생정보 조회
+	//개인 학생정보 조회(학생)
 	public void retrieveStudentByStudentNo(int studentNo) {
 		
-		Student student = studentRepo.getStudentByNo(studentNo);
+		Student student = studentRepo.getStudent(studentNo);
 		if(student.getName() == null) {
 			System.out.println("존재하지 않은 학번입니다.");
 			return;
@@ -261,6 +280,40 @@ public class SchoolServiceImple implements SchoolService {
 		System.out.println(student.getNo()+"\t"+student.getName()+
 				"\t"+student.getDept()+"\t"+student.getGrade());
 	}
+	//과목조회(학생)
+	public void retrieveSubjectByStudentNo(int studentNo) {
+		
+		Student student = studentRepo.getStudent(studentNo);
+		if(student == null) {
+			System.out.println("해당 학생이 존재하지 않습니다.");
+			return;
+		}
+		Subject[] subjects = subjectRepo.getAllSubjectByDept(student.getDept());
+		
+		for(Subject subject : subjects) {
+			System.out.println(subject.getNo()+"  "+subject.getTitle()+"         "
+					+"\t"+subject.getDept()+"\t"+subject.getCredit());
+		}
+	}
+	//신청가능한 개설강좌(학생)
+	public void retrieveCourseByStudent(int studentNo) {
+		
+		Student student = studentRepo.getStudent(studentNo);
+		if(student == null) {
+			System.out.println("해당 학생이 존재하지 않습니다.");
+			return;
+		}
+
+		Subject subject = subjectRepo.getSubjectByDept(student.getDept());
+		Course[] courses = courseRepo.getAllCourseBySubjectNo(subject.getNo());
+		for(Course course : courses) {
+			Professor professor = professorRepo.getProfessorByNo(course.getProfessorNo());
+			System.out.println(course.getNo()+"  "+course.getName()+"\t"
+					+course.getQuota()+professor.getName()+"\t"
+					+subject.getTitle()+"\t"+subject.getDept());
+		}
+	}
+	
 	//전체 강좌조회(course)
 	public void retrieveAllCourse() {
 		Course[] courses = courseRepo.getAllCourse();
@@ -272,14 +325,12 @@ public class SchoolServiceImple implements SchoolService {
 				+"\t"+course.getQuota()+"\t"+professor.getName()
 				+"\t"+subject.getTitle()+"                "+"\t"+subject.getDept());
 		}
-	
-	
 	}
 	//전체 개설강좌 조회(registration)
 	public void retrieveAllRegistration() {
 		Registration[] registrations = registrationRepo.getAllRegistrations();
 		for(Registration registration : registrations) {
-			Course course = courseRepo.getCourseByNo(registration.getCourseNo());
+			Course course = courseRepo.getCourse(registration.getCourseNo());
 			Professor professor = professorRepo.getProfessorByNo(course.getProfessorNo());
 			Subject subject = subjectRepo.getSubjectByNo(course.getSubjectNo());
 			System.out.println(registration.getNo()+"\t"+course.getNo()

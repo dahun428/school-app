@@ -42,8 +42,8 @@ public class StudentRepository {
 	public Student[] getAllStudents() {
 		return Arrays.copyOfRange(db, 0, position);
 	}
+	
 	public Student[] getAllStudentsByRegistrationNo(int registrationNo) {
-
 		Student[] student = new Student[position];
 		int count = 0;
 		for(int i = 0; i < position; i++) {

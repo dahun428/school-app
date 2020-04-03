@@ -57,7 +57,7 @@ public interface SchoolService {
 	//	<li>학생등록</li>
 	void addNewStudent(Student student);
 	//	<li>수강신청</li>
-	void registrateCourse(int studentNo, String title);
+	void registrateCourse(int studentNo, int courseNo);
 	//	<li>수강신청 현황 조회</li>
 	void retrieveRegistration(int studentNo);
 	
@@ -72,4 +72,10 @@ public interface SchoolService {
 	void retrieveAllCourse();
 	//전체 개설 강좌 조회
 	void retrieveAllRegistration();
+	//과목조회(student)
+	void retrieveSubjectByStudentNo(int studentNo);
+	//신청가능한 개설강좌(학생)
+	public void retrieveCourseByStudent(int studentNo);
+	//해당 교수 개설강좌 신청자 조회(교수)
+	public void retrieveRegistrationStudentByNo(int professorNo, int registrationNo);
 }

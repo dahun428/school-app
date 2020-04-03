@@ -30,7 +30,7 @@ public class SubjectRepository {
 	}
 	
 	public Subject getSubjectByNo(int subjectNo) {
-		Subject subject = new Subject();
+		Subject subject = null;
 		for(int i = 0; i < position; i++) {
 			if(db[i].getNo() == subjectNo) {
 				subject = db[i];
@@ -39,9 +39,26 @@ public class SubjectRepository {
 		}
 		return subject;
 	}
-	
-	public Subject[] getAllSubject() {
-		return Arrays.copyOfRange(db, 0, position);
+	public Subject getSubjectByDept(String dept) {
+		Subject subject = null;
+		for(int i = 0; i < position; i++) {
+			if(db[i].getDept().equals(dept)) {
+				subject = db[i];
+				break;
+			}
+		}
+		return subject;
+	}
+	public Subject[] getAllSubjectByDept(String dept) {
+		Subject[] subject = new Subject[position];
+		int count = 0;
+		for(int i = 0; i < position; i++) {
+			if(dept.equals(db[i].getDept())) {
+				subject[count] = db[i];
+				count++;
+			}
+		}
+		return Arrays.copyOfRange(subject, 0, count);
 	}
 	
 	public boolean isExistSubjectByTitle(Subject subject) {
@@ -68,4 +85,9 @@ public class SubjectRepository {
 		return Arrays.copyOfRange(subject, 0, count);
 	}
 	
+	public Subject[] getAllSubject() {
+		return Arrays.copyOfRange(db, 0, position);
+	}
+	
 }
+
